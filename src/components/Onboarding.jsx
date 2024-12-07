@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Brain, Sparkles, Target, ChevronRight, Book, Lightbulb, Clock } from 'lucide-react';
+import { Brain, Sparkles, Target, ChevronRight, Book, Lightbulb } from 'lucide-react';
 
 const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
   const [step, setStep] = useState('welcome');
   const [quizStep, setQuizStep] = useState(0);
+  const [responses, setResponses] = useState([]);
   const [userData, setUserData] = useState({
     name: '',
     age: '',
@@ -13,50 +14,75 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
 
   const questions = [
     {
-      question: "How do you prefer to learn new concepts?",
-      subtext: "This helps us customize your learning experience",
+      question: "When you're learning something new, what helps you understand it best?",
+      subtext: "This helps us personalize your content delivery",
       options: [
-        { text: "Through visual diagrams and illustrations", icon: "👁️", type: "Visual" },
-        { text: "By reading detailed explanations", icon: "📚", type: "Theoretical" },
-        { text: "Through hands-on practice", icon: "🤚", type: "Practical" }
+        { text: "Listening to someone explain it", icon: "👂", type: "Auditory" },
+        { text: "Seeing diagrams, charts, or written instructions", icon: "👁️", type: "Visual" },
+        { text: "Doing hands-on activities or trying it out yourself", icon: "🤚", type: "Kinesthetic" }
       ]
     },
     {
-      question: "When do you usually feel most focused?",
-      subtext: "We'll schedule your important topics during these times",
+      question: "If you're following directions to assemble something, which method do you prefer?",
+      subtext: "We'll adapt instructions to your style",
       options: [
-        { text: "Early morning - Fresh mind", icon: "🌅", type: "Morning" },
-        { text: "Afternoon - Peak energy", icon: "☀️", type: "Afternoon" },
-        { text: "Evening - Calm environment", icon: "🌙", type: "Evening" }
+        { text: "Listening to a person explain the steps", icon: "🗣️", type: "Auditory" },
+        { text: "Reading a detailed manual or looking at pictures", icon: "📖", type: "Visual" },
+        { text: "Assembling it step-by-step while figuring it out", icon: "🔧", type: "Kinesthetic" }
       ]
     },
     {
-      question: "How do you prefer to track your progress?",
-      subtext: "This helps us show your progress in the most meaningful way",
+      question: "During a lecture or presentation, what do you do to stay focused?",
       options: [
-        { text: "Visual charts and graphs", icon: "📊", type: "Visual" },
-        { text: "Detailed statistics", icon: "📋", type: "Detailed" },
-        { text: "Achievement badges", icon: "🏆", type: "Gamified" }
+        { text: "Listen carefully to the speaker's voice", icon: "🎧", type: "Auditory" },
+        { text: "Look at slides, notes, or visuals provided", icon: "📊", type: "Visual" },
+        { text: "Take notes or doodle while listening", icon: "✏️", type: "Kinesthetic" }
       ]
     },
     {
-      question: "How do you handle challenging topics?",
-      subtext: "We'll adjust our teaching approach accordingly",
+      question: "When you're trying to remember something, what do you usually do?",
       options: [
-        { text: "Break into smaller parts", icon: "🧩", type: "Structured" },
-        { text: "Look for real-life examples", icon: "🌍", type: "Practical" },
-        { text: "Study with peers", icon: "👥", type: "Collaborative" }
+        { text: "Repeat it out loud or silently to yourself", icon: "🔁", type: "Auditory" },
+        { text: "Picture it in your mind or visualize it on paper", icon: "🖼️", type: "Visual" },
+        { text: "Write it down or physically practice it", icon: "📝", type: "Kinesthetic" }
       ]
     },
     {
-      question: "What's your preferred study session length?",
-      subtext: "We'll customize study sessions to match your concentration span",
+      question: "How do you best recall a story you've read or heard?",
       options: [
-        { text: "Short focused sessions (25-30 mins)", icon: "⚡", type: "Pomodoro" },
-        { text: "Medium sessions (45-60 mins)", icon: "⏱️", type: "Standard" },
-        { text: "Long deep-dive sessions (90+ mins)", icon: "🎯", type: "Extended" }
+        { text: "By remembering the conversations or dialogues", icon: "💭", type: "Auditory" },
+        { text: "By visualizing the scenes or characters", icon: "🎬", type: "Visual" },
+        { text: "By recalling the actions or events in the story", icon: "🎭", type: "Kinesthetic" }
+      ]
+    },
+    {
+      question: "What's your preferred way to study for a test?",
+      options: [
+        { text: "Reading notes out loud or explaining to someone", icon: "📢", type: "Auditory" },
+        { text: "Using flashcards or drawing diagrams", icon: "📋", type: "Visual" },
+        { text: "Creating practice problems and solving them", icon: "✍️", type: "Kinesthetic" }
+      ]
+    },
+    {
+      question: "If you're watching a tutorial, how do you engage with the material?",
+      options: [
+        { text: "Focus on listening to the explanation and tone", icon: "🎵", type: "Auditory" },
+        { text: "Watch the screen closely for visuals", icon: "🔍", type: "Visual" },
+        { text: "Follow along and practice each step", icon: "👆", type: "Kinesthetic" }
+      ]
+    },
+    {
+      question: "In a group project, what role do you usually prefer?",
+      options: [
+        { text: "Discussion leader or presenter", icon: "🎤", type: "Auditory" },
+        { text: "Visual designer or organizer", icon: "🎨", type: "Visual" },
+        { text: "Hands-on implementer or builder", icon: "🛠️", type: "Kinesthetic" }
       ]
     }
+];
+
+  const grades = [
+    '9th Grade', '10th Grade', '11th Grade', '12th Grade', 'College', 'Other'
   ];
 
   const subjects = [
@@ -68,29 +94,29 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
     { id: 'literature', name: 'Literature', icon: '📖' }
   ];
 
-  const grades = [
-    '9th Grade', '10th Grade', '11th Grade', '12th Grade', 'College', 'Other'
-  ];
+  const handleQuizAnswer = (option) => {
+    const newResponses = [...responses, option];
+    setResponses(newResponses);
 
-  const handleQuizComplete = (responses) => {
-    // Analyze responses to determine learning style
-    const learningStyle = {
-      type: responses[0].type,
-      icon: responses[0].icon,
-      description: `You learn best through ${responses[0].type.toLowerCase()} content. We'll prioritize ${
-        responses[0].type === 'Visual' ? 'diagrams and visual aids' :
-        responses[0].type === 'Theoretical' ? 'detailed explanations' :
-        'interactive exercises'
-      } in your study materials.`,
-      preferences: {
-        timeOfDay: responses[1].type,
-        trackingStyle: responses[2].type,
-        approachStyle: responses[3].type,
-        sessionLength: responses[4].type
-      }
-    };
+    if (quizStep < questions.length - 1) {
+      setQuizStep(quizStep + 1);
+    } else {
+      const learningStyle = {
+        type: newResponses[0].type,
+        icon: newResponses[0].icon,
+        description: `You learn best through ${newResponses[0].text.toLowerCase()}. We'll customize your learning experience accordingly.`,
+        preferences: {
+          timeOfDay: newResponses[1].type,
+          progressStyle: newResponses[2].type
+        }
+      };
 
-    onQuizComplete(learningStyle);
+      console.log('Quiz completed:', { userData, learningStyle });
+      
+      // Submit both user data and quiz results
+      onUserDataSubmit(userData);
+      onQuizComplete(learningStyle);
+    }
   };
 
   const renderWelcome = () => (
@@ -101,28 +127,28 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
       <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 text-center">
         Smart Study Buddy
       </h1>
-      <p className="text-center text-gray-600">
+      <p className="text-center text-gray-600 dark:text-gray-300">
         Your AI-powered learning companion
       </p>
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-4">
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-4">
         <div className="flex items-center space-x-2">
           <Sparkles className="text-yellow-500" size={24} />
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             Welcome to Smart Learning
           </h2>
         </div>
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
             <Brain className="text-purple-600" size={20} />
-            <p className="text-gray-600">AI-powered personalized learning</p>
+            <p className="text-gray-600 dark:text-gray-300">AI-powered personalized learning</p>
           </div>
           <div className="flex items-center space-x-2">
             <Target className="text-purple-600" size={20} />
-            <p className="text-gray-600">Smart progress tracking</p>
+            <p className="text-gray-600 dark:text-gray-300">Smart progress tracking</p>
           </div>
           <div className="flex items-center space-x-2">
-            <Clock className="text-purple-600" size={20} />
-            <p className="text-gray-600">Adaptive study schedules</p>
+            <Book className="text-purple-600" size={20} />
+            <p className="text-gray-600 dark:text-gray-300">Interactive study sessions</p>
           </div>
         </div>
         <button 
@@ -138,49 +164,49 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
 
   const renderRegistration = () => (
     <div className="max-w-md mx-auto pt-12">
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-6">
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-6">
         <div className="flex items-center space-x-2">
           <Book className="text-purple-600" size={24} />
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             Create Your Profile
           </h2>
         </div>
         
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Your Name
             </label>
             <input
               type="text"
               value={userData.name}
               onChange={(e) => setUserData({...userData, name: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Enter your name"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Age
             </label>
             <input
               type="number"
               value={userData.age}
               onChange={(e) => setUserData({...userData, age: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="Enter your age"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Grade Level
             </label>
             <select
               value={userData.grade}
               onChange={(e) => setUserData({...userData, grade: e.target.value})}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             >
               <option value="">Select your grade</option>
               {grades.map((grade) => (
@@ -190,7 +216,7 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Select Subjects
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -207,8 +233,8 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
                   }}
                   className={`p-3 border rounded-lg flex items-center space-x-2 transition-colors ${
                     userData.subjects.includes(subject.id)
-                      ? 'bg-purple-50 border-purple-300 text-purple-700'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-purple-50 border-purple-300 text-purple-700 dark:bg-purple-900/30 dark:border-purple-600 dark:text-purple-300'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <span>{subject.icon}</span>
@@ -222,7 +248,6 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
         <button
           onClick={() => {
             if (userData.name && userData.age && userData.grade && userData.subjects.length > 0) {
-              onUserDataSubmit(userData);
               setStep('quiz');
             }
           }}
@@ -230,7 +255,7 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
           className={`w-full py-3 rounded-lg flex items-center justify-center space-x-2 
             ${userData.name && userData.age && userData.grade && userData.subjects.length > 0
               ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-              : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+              : 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400'}`}
         >
           <span>Continue to Learning Style Quiz</span>
           <ChevronRight size={20} />
@@ -241,9 +266,11 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
 
   const renderQuiz = () => (
     <div className="max-w-md mx-auto pt-12">
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-4">
+      <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 shadow-lg space-y-4">
         <div className="flex justify-between mb-4">
-          <span className="text-sm text-gray-500">Question {quizStep + 1} of {questions.length}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Question {quizStep + 1} of {questions.length}
+          </span>
           <div className="flex gap-1">
             {questions.map((_, index) => (
               <div 
@@ -251,7 +278,7 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
                 className={`h-2 w-8 rounded-full ${
                   index === quizStep 
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                    : 'bg-gray-200'
+                    : 'bg-gray-200 dark:bg-gray-700'
                 }`}
               />
             ))}
@@ -259,28 +286,25 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
         </div>
         
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
             {questions[quizStep].question}
           </h3>
-          <p className="text-sm text-gray-600">{questions[quizStep].subtext}</p>
+          {questions[quizStep].subtext && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {questions[quizStep].subtext}
+            </p>
+          )}
         </div>
         
         <div className="space-y-3">
           {questions[quizStep].options.map((option, index) => (
             <button
               key={index}
-              onClick={() => {
-                const responses = [...Array(quizStep), option];
-                if (quizStep < questions.length - 1) {
-                  setQuizStep(quizStep + 1);
-                } else {
-                  handleQuizComplete(responses);
-                }
-              }}
-              className="w-full p-4 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors flex items-center space-x-3"
+              onClick={() => handleQuizAnswer(option)}
+              className="w-full p-4 text-left border rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors dark:border-gray-600 dark:hover:bg-purple-900/30 flex items-center space-x-3"
             >
               <span className="text-2xl">{option.icon}</span>
-              <span>{option.text}</span>
+              <span className="text-gray-800 dark:text-white">{option.text}</span>
             </button>
           ))}
         </div>
@@ -289,7 +313,7 @@ const Onboarding = ({ onQuizComplete, onUserDataSubmit }) => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-6">
       {step === 'welcome' && renderWelcome()}
       {step === 'registration' && renderRegistration()}
       {step === 'quiz' && renderQuiz()}

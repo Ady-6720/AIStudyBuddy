@@ -1,23 +1,18 @@
-export const slideTransitions = {
-    enter: {
-      from: "transform translate-x-full opacity-0",
-      to: "transform translate-x-0 opacity-100",
-    },
-    exit: {
-      from: "transform translate-x-0 opacity-100",
-      to: "transform -translate-x-full opacity-0",
-    },
-    duration: "duration-300",
-  };
-  
-  export const fadeTransitions = {
-    enter: {
-      from: "opacity-0",
-      to: "opacity-100",
-    },
-    exit: {
-      from: "opacity-100",
-      to: "opacity-0",
-    },
-    duration: "duration-200",
-  };
+export const transitions = {
+  slideLeft: {
+    enter: "animate-[slide-left-in_0.3s_ease-out]",
+    exit: "animate-[slide-left-out_0.3s_ease-in]"
+  },
+  slideRight: {
+    enter: "animate-[slide-right-in_0.3s_ease-out]",
+    exit: "animate-[slide-right-out_0.3s_ease-in]"
+  },
+  fadeUp: {
+    enter: "animate-[fade-up-in_0.3s_ease-out]",
+    exit: "animate-[fade-up-out_0.3s_ease-in]"
+  },
+  scale: {
+    enter: "animate-[scale-in_0.2s_ease-out]",
+    exit: "animate-[scale-out_0.2s_ease-in]"
+  }
+};

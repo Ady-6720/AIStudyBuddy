@@ -6,13 +6,15 @@ import SubjectScreen from './SubjectScreen';
 import ProfileScreen from './ProfileScreen';
 import GroupsScreen from './GroupsScreen';
 import LearningProgress from './learning/LearningProgress';
+import TransitionWrapper from './common/TransitionWrapper';
 
 const App = () => {
-  // Core state management
+  // Core state
+  const [isLoading, setIsLoading] = useState(true);
   const [currentScreen, setCurrentScreen] = useState('onboarding');
+  const [previousScreen, setPreviousScreen] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [screenHistory, setScreenHistory] = useState(['onboarding']);
-  
+
   // User data and preferences
   const [userData, setUserData] = useState({
     name: '',
@@ -23,7 +25,6 @@ const App = () => {
     studyStreak: 0
   });
 
-  // Learning style and preferences
   const [learningStyle, setLearningStyle] = useState({
     type: '',
     icon: '',
@@ -35,27 +36,32 @@ const App = () => {
     }
   });
 
-  // Load saved data on initial mount
+  // Load saved data
   useEffect(() => {
-    const savedData = localStorage.getItem('study_buddy_data');
-    if (savedData) {
+    const loadSavedData = async () => {
       try {
-        const parsedData = JSON.parse(savedData);
-        setUserData(parsedData.userData || {});
-        setLearningStyle(parsedData.learningStyle || {});
-        if (parsedData.userData?.name) {
-          setCurrentScreen('dashboard');
-          setScreenHistory(['dashboard']);
+        const savedData = localStorage.getItem('study_buddy_data');
+        if (savedData) {
+          const parsedData = JSON.parse(savedData);
+          if (parsedData.userData?.name && parsedData.learningStyle?.type) {
+            setUserData(parsedData.userData);
+            setLearningStyle(parsedData.learningStyle);
+            setCurrentScreen('dashboard');
+          }
         }
       } catch (error) {
         console.error('Error loading saved data:', error);
+      } finally {
+        setTimeout(() => setIsLoading(false), 1000);
       }
-    }
+    };
+
+    loadSavedData();
   }, []);
 
-  // Save data whenever it changes
+  // Save data on changes
   useEffect(() => {
-    if (userData.name || learningStyle.type) {
+    if (userData.name && learningStyle.type) {
       try {
         localStorage.setItem('study_buddy_data', JSON.stringify({
           userData: {
@@ -70,50 +76,42 @@ const App = () => {
     }
   }, [userData, learningStyle]);
 
-  // Study streak calculation
-  useEffect(() => {
-    if (userData.lastLogin) {
-      const lastLogin = new Date(userData.lastLogin);
-      const today = new Date();
-      const diffDays = Math.floor((today - lastLogin) / (1000 * 60 * 60 * 24));
-      
-      if (diffDays === 1) {
-        setUserData(prev => ({
-          ...prev,
-          studyStreak: prev.studyStreak + 1
-        }));
-      } else if (diffDays > 1) {
-        setUserData(prev => ({
-          ...prev,
-          studyStreak: 0
-        }));
-      }
-    }
-  }, [userData.lastLogin]);
-
   // Navigation handlers
   const handleNavigation = (screen) => {
-    console.log('Navigating to:', screen);
-    setScreenHistory(prev => [...prev, screen]);
+    setPreviousScreen(currentScreen);
     setCurrentScreen(screen);
   };
 
-  const handleBack = () => {
-    if (screenHistory.length > 1) {
-      const newHistory = screenHistory.slice(0, -1);
-      setScreenHistory(newHistory);
-      setCurrentScreen(newHistory[newHistory.length - 1]);
+  const getTransitionType = (newScreen) => {
+    const screenOrder = ['onboarding', 'dashboard', 'subject', 'stats', 'groups', 'profile'];
+    const currentIndex = screenOrder.indexOf(currentScreen);
+    const newIndex = screenOrder.indexOf(newScreen);
+
+    if (newIndex > currentIndex) return 'slideLeft';
+    if (newIndex < currentIndex) return 'slideRight';
+    return 'fadeUp';
+  };
+
+  // Event handlers
+  const handleQuizComplete = (style) => {
+    const newData = {
+      userData: {
+        ...userData,
+        lastLogin: new Date().toISOString()
+      },
+      learningStyle: style
+    };
+
+    try {
+      localStorage.setItem('study_buddy_data', JSON.stringify(newData));
+      setLearningStyle(style);
+      setCurrentScreen('dashboard');
+    } catch (error) {
+      console.error('Error saving quiz completion data:', error);
     }
   };
 
-  const handleQuizComplete = (style) => {
-    console.log('Quiz completed, setting learning style');
-    setLearningStyle(style);
-    handleNavigation('dashboard');
-  };
-
   const handleUserDataSubmit = (data) => {
-    console.log('Setting user data:', data);
     setUserData(prev => ({
       ...prev,
       ...data,
@@ -130,7 +128,6 @@ const App = () => {
   const handleLogout = () => {
     localStorage.removeItem('study_buddy_data');
     setCurrentScreen('onboarding');
-    setScreenHistory(['onboarding']);
     setUserData({
       name: '',
       age: '',
@@ -147,103 +144,139 @@ const App = () => {
     });
   };
 
+  // Loading screen
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+        <TransitionWrapper type="scale">
+          <div className="flex flex-col items-center space-y-4">
+            <Brain size={48} className="text-purple-600 animate-pulse" />
+            <div className="flex space-x-2">
+              <div className="w-3 h-3 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+              <div className="w-3 h-3 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+              <div className="w-3 h-3 bg-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+            </div>
+          </div>
+        </TransitionWrapper>
+      </div>
+    );
+  }
+
   // Screen renderer
   const renderCurrentScreen = () => {
+    const transitionType = getTransitionType(currentScreen);
+    
     switch (currentScreen) {
       case 'onboarding':
         return (
-          <Onboarding 
-            onQuizComplete={handleQuizComplete}
-            onUserDataSubmit={handleUserDataSubmit}
-          />
+          <TransitionWrapper type="fadeUp">
+            <Onboarding 
+              onQuizComplete={handleQuizComplete}
+              onUserDataSubmit={handleUserDataSubmit}
+            />
+          </TransitionWrapper>
         );
       
       case 'dashboard':
         return (
-          <Homepage 
-            learningStyle={learningStyle}
-            userData={userData}
-            onSubjectSelect={handleSubjectSelect}
-            onNavigate={handleNavigation}
-          />
+          <TransitionWrapper type={transitionType}>
+            <Homepage 
+              learningStyle={learningStyle}
+              userData={userData}
+              onSubjectSelect={handleSubjectSelect}
+              onNavigate={handleNavigation}
+            />
+          </TransitionWrapper>
         );
       
       case 'subject':
         return (
-          <SubjectScreen 
-            subject={selectedSubject}
-            onBack={handleBack}
-            userData={userData}
-          />
+          <TransitionWrapper type="slideLeft">
+            <SubjectScreen 
+              subject={selectedSubject}
+              onBack={() => handleNavigation('dashboard')}
+              userData={userData}
+            />
+          </TransitionWrapper>
         );
       
       case 'groups':
         return (
-          <GroupsScreen 
-            userData={userData}
-            onNavigate={handleNavigation}
-          />
+          <TransitionWrapper type={transitionType}>
+            <GroupsScreen 
+              userData={userData}
+              onNavigate={handleNavigation}
+            />
+          </TransitionWrapper>
         );
       
       case 'stats':
         return (
-          <LearningProgress 
-            userData={userData}
-            onNavigate={handleNavigation}
-          />
+          <TransitionWrapper type={transitionType}>
+            <LearningProgress 
+              userData={userData}
+              onNavigate={handleNavigation}
+            />
+          </TransitionWrapper>
         );
       
       case 'profile':
         return (
-          <ProfileScreen 
-            userData={userData}
-            learningStyle={learningStyle}
-            onNavigate={handleNavigation}
-            onLogout={handleLogout}
-          />
+          <TransitionWrapper type={transitionType}>
+            <ProfileScreen 
+              userData={userData}
+              learningStyle={learningStyle}
+              onNavigate={handleNavigation}
+              onLogout={handleLogout}
+            />
+          </TransitionWrapper>
         );
       
       default:
-        return <Homepage />;
+        return null;
     }
   };
 
-  // Determine if navigation should be shown
   const showNavigation = currentScreen !== 'onboarding';
-  const showBackButton = currentScreen !== 'dashboard' && currentScreen !== 'onboarding';
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Main Content */}
+    <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       <div className={`${showNavigation ? 'pb-20' : ''}`}>
         {renderCurrentScreen()}
       </div>
       
-      {/* Bottom Navigation */}
       {showNavigation && (
-        <nav className="fixed bottom-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t dark:border-gray-700 z-40">
+        <nav className="fixed bottom-0 w-full bg-white/80 backdrop-blur-sm border-t z-40">
           <div className="flex justify-around p-4 max-w-lg mx-auto">
             <button 
               onClick={() => handleNavigation('dashboard')}
-              className={`${currentScreen === 'dashboard' ? 'text-purple-600' : 'text-gray-400'} hover:text-purple-600 transition-colors`}
+              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                currentScreen === 'dashboard' ? 'text-purple-600' : 'text-gray-400'
+              }`}
             >
               <Book size={24} />
             </button>
             <button 
               onClick={() => handleNavigation('stats')}
-              className={`${currentScreen === 'stats' ? 'text-purple-600' : 'text-gray-400'} hover:text-purple-600 transition-colors`}
+              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                currentScreen === 'stats' ? 'text-purple-600' : 'text-gray-400'
+              }`}
             >
               <BarChart2 size={24} />
             </button>
             <button 
               onClick={() => handleNavigation('groups')}
-              className={`${currentScreen === 'groups' ? 'text-purple-600' : 'text-gray-400'} hover:text-purple-600 transition-colors`}
+              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                currentScreen === 'groups' ? 'text-purple-600' : 'text-gray-400'
+              }`}
             >
               <Users size={24} />
             </button>
             <button 
               onClick={() => handleNavigation('profile')}
-              className={`${currentScreen === 'profile' ? 'text-purple-600' : 'text-gray-400'} hover:text-purple-600 transition-colors`}
+              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                currentScreen === 'profile' ? 'text-purple-600' : 'text-gray-400'
+              }`}
             >
               <User size={24} />
             </button>
