@@ -1,4 +1,4 @@
-# Smart Study Buddy
+# Smart Study Buddy - PROTOTYPE
 
 Smart Study Buddy is a responsive web application built using **React**, **Vite**, and **Tailwind CSS**. It provides a mobile-like experience using `react-native-web` and includes custom animations for an engaging UI.
 
