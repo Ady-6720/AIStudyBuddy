@@ -1,16 +1,15 @@
 import React from 'react';
-import { transitions } from '../../utils/transitions';
 
-const TransitionWrapper = ({ 
-  children, 
-  type = 'fadeUp', 
-  className = '',
-  show = true 
-}) => {
-  const currentTransition = transitions[type];
+const TransitionWrapper = ({ children, type = 'fadeUp', className = '' }) => {
+  const transitions = {
+    fadeUp: 'animate-fadeUp',
+    slideLeft: 'animate-slideLeft',
+    slideRight: 'animate-slideRight',
+    scale: 'animate-scale'
+  };
 
   return (
-    <div className={`${show ? currentTransition.enter : currentTransition.exit} ${className}`}>
+    <div className={`${transitions[type]} ${className}`}>
       {children}
     </div>
   );

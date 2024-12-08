@@ -167,7 +167,12 @@ const SubjectScreen = ({ subject, onBack }) => {
           </button>
         </div>
       </div>
-
+      <button
+  onClick={() => onNavigate('practice')}
+  className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+>
+  Start Practice
+</button>
       {/* Main Content */}
       <div className="pt-40 px-6 space-y-6">
         {currentSection === 'content' ? (

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Book, BarChart2, Users, User, Brain } from 'lucide-react';
+import { Book, BarChart2, Users, User, Brain, MessageSquare } from 'lucide-react';
 import Homepage from './Homepage';
 import Onboarding from './Onboarding';
 import SubjectScreen from './SubjectScreen';
 import ProfileScreen from './ProfileScreen';
 import GroupsScreen from './GroupsScreen';
-import LearningProgress from './learning/LearningProgress';
+import StatsScreen from './StatsScreen';
+import ChatScreen from './chat/ChatScreen';
 import TransitionWrapper from './common/TransitionWrapper';
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
   const [currentScreen, setCurrentScreen] = useState('onboarding');
   const [previousScreen, setPreviousScreen] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [showChat, setShowChat] = useState(false);
 
   // User data and preferences
   const [userData, setUserData] = useState({
@@ -213,7 +215,7 @@ const App = () => {
       case 'stats':
         return (
           <TransitionWrapper type={transitionType}>
-            <LearningProgress 
+            <StatsScreen 
               userData={userData}
               onNavigate={handleNavigation}
             />
@@ -246,43 +248,61 @@ const App = () => {
       </div>
       
       {showNavigation && (
-        <nav className="fixed bottom-0 w-full bg-white/80 backdrop-blur-sm border-t z-40">
-          <div className="flex justify-around p-4 max-w-lg mx-auto">
-            <button 
-              onClick={() => handleNavigation('dashboard')}
-              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
-                currentScreen === 'dashboard' ? 'text-purple-600' : 'text-gray-400'
-              }`}
-            >
-              <Book size={24} />
-            </button>
-            <button 
-              onClick={() => handleNavigation('stats')}
-              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
-                currentScreen === 'stats' ? 'text-purple-600' : 'text-gray-400'
-              }`}
-            >
-              <BarChart2 size={24} />
-            </button>
-            <button 
-              onClick={() => handleNavigation('groups')}
-              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
-                currentScreen === 'groups' ? 'text-purple-600' : 'text-gray-400'
-              }`}
-            >
-              <Users size={24} />
-            </button>
-            <button 
-              onClick={() => handleNavigation('profile')}
-              className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
-                currentScreen === 'profile' ? 'text-purple-600' : 'text-gray-400'
-              }`}
-            >
-              <User size={24} />
-            </button>
-          </div>
-        </nav>
+        <>
+          {/* Chat Button */}
+          <button
+            onClick={() => setShowChat(true)}
+            className="fixed bottom-24 right-6 bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition-colors"
+          >
+            <MessageSquare size={24} />
+          </button>
+
+          {/* Navigation */}
+          <nav className="fixed bottom-0 w-full bg-white/80 backdrop-blur-sm border-t z-40">
+            <div className="flex justify-around p-4 max-w-lg mx-auto">
+              <button 
+                onClick={() => handleNavigation('dashboard')}
+                className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  currentScreen === 'dashboard' ? 'text-purple-600' : 'text-gray-400'
+                }`}
+              >
+                <Book size={24} />
+              </button>
+              <button 
+                onClick={() => handleNavigation('stats')}
+                className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  currentScreen === 'stats' ? 'text-purple-600' : 'text-gray-400'
+                }`}
+              >
+                <BarChart2 size={24} />
+              </button>
+              <button 
+                onClick={() => handleNavigation('groups')}
+                className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  currentScreen === 'groups' ? 'text-purple-600' : 'text-gray-400'
+                }`}
+              >
+                <Users size={24} />
+              </button>
+              <button 
+                onClick={() => handleNavigation('profile')}
+                className={`transform transition-all duration-200 hover:scale-110 active:scale-95 ${
+                  currentScreen === 'profile' ? 'text-purple-600' : 'text-gray-400'
+                }`}
+              >
+                <User size={24} />
+              </button>
+            </div>
+          </nav>
+        </>
       )}
+
+      {/* Chat Screen */}
+      <ChatScreen 
+        visible={showChat}
+        onClose={() => setShowChat(false)}
+        userData={userData}
+      />
     </div>
   );
 };
