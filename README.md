@@ -83,7 +83,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - [Vite](https://vitejs.dev/)
 
 ## 📧 Contact
-For any queries or suggestions, please reach out to [your-email@example.com]
+For any queries or suggestions, please reach out to Aditya.inc6720@gmail.com
 
 ## 📸 Screenshots
 [Add screenshots of key features]
