@@ -1,135 +1,98 @@
-# Smart Study Buddy - PROTOTYPE
+# Smart Study Buddy - AI-Powered Learning Companion
 
-Smart Study Buddy is a responsive web application built using **React**, **Vite**, and **Tailwind CSS**. It provides a mobile-like experience using `react-native-web` and includes custom animations for an engaging UI.
+Smart Study Buddy is an intelligent learning platform that personalizes your educational journey using AI. The app adapts to your learning style, provides real-time insights, and helps you maintain consistent study habits.
 
----
+## 🌟 Features
 
-## Features
+### AI-Powered Learning
+- **Learning Style Detection**: Analyzes your preferences through an interactive quiz
+- **Personalized Recommendations**: Tailors content and study methods to your style
+- **Adaptive Difficulty**: Adjusts based on your performance
+- **Smart Progress Tracking**: AI-driven insights and performance predictions
 
-- Responsive and mobile-friendly design.
-- Custom animations using Tailwind's `@keyframes`.
-- Dark mode support.
-- Built for performance using Vite.
+### Core Features
+- **Interactive Dashboard**: Visual progress tracking and study analytics
+- **Subject Management**: Organized topic tracking and progress monitoring
+- **Study Groups**: AI-matched study partners and collaborative learning
+- **Performance Analytics**: Detailed statistics and progress visualization
+- **AI Chat Assistant**: 24/7 help with academic questions
 
----
+## 🚀 Getting Started
 
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v16 or later): [Download Node.js](https://nodejs.org/)
-- A package manager like **npm** (comes with Node.js) or **yarn**.
-
----
-
-## Installation and Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Ady-6720/AIStudyBuddy.git
-   cd AIStudyBuddy
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. Open the app in your browser at:
-   ```
-   http://localhost:5173
-   ```
-
----
-
-## Build for Production
-
-To create an optimized production build:
+### Prerequisites
 ```bash
-npm run build
+Node.js (v14 or higher)
+npm (v6 or higher)
 ```
 
----
-
-## Preview Production Build
-
-To preview the production build locally:
+### Installation
+1. Clone the repository
 ```bash
-npm run preview
+git clone https://github.com/yourusername/smart-study-buddy.git
+cd smart-study-buddy
 ```
 
----
-
-## Required Libraries
-
-If any libraries are missing or need to be re-installed, run:
+2. Install dependencies
 ```bash
-npm install react react-dom tailwindcss postcss autoprefixer vite
-npm install react-native-web lucide-react
+npm install
 ```
 
----
-
-## Project Structure
-
-```plaintext
-├── src/
-│   ├── components/    # Reusable React components
-│   ├── styles/        # Tailwind and custom styles
-│   └── App.jsx        # Main application entry point
-├── public/
-│   └── index.html     # Root HTML file
-├── tailwind.config.js # Tailwind configuration
-├── vite.config.js     # Vite configuration
-├── package.json       # Project dependencies and scripts
-└── README.md          # Documentation
+3. Start the development server
+```bash
+npm run dev
 ```
 
+## 🛠️ Tech Stack
+- React.js
+- Tailwind CSS
+- Lucide Icons
+- Vite
+
+## 📱 Screens
+- **Onboarding**: Learning style assessment and user preferences
+- **Dashboard**: Main interface with subject cards and progress
+- **Subject View**: Detailed subject progress and topic management
+- **Statistics**: Comprehensive performance analytics
+- **Groups**: Collaborative study environment
+- **Profile**: User settings and achievements
+
+## 🎨 Design Features
+- Clean, modern UI with gradient accents
+- Responsive design for all devices
+- Interactive elements and smooth transitions
+- Progress visualization
+- Intuitive navigation
+
+## 🔋 Future Enhancements
+- Extended practice module with more subjects
+- Enhanced AI capabilities
+- Advanced group study features
+- Mobile app development
+- Integration with educational platforms
+
+## 👥 Contributing
+Contributions are welcome! Please read our contributing guidelines before getting started.
+
+## 📝 License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## 🙏 Acknowledgments
+- [React Documentation](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Lucide Icons](https://lucide.dev/)
+- [Vite](https://vitejs.dev/)
+
+## 📧 Contact
+For any queries or suggestions, please reach out to [your-email@example.com]
+
+## 📸 Screenshots
+[Add screenshots of key features]
+
 ---
+Built with ❤️ by [Your Team Name]
 
-## Screenshots
-
-### Home Page
-![Home Page](./screenshots/home.png)
-
-### Dark Mode
-![Dark Mode](./screenshots/dark_mode.png)
-
----
-
-## Contributing
-
-Contributions are welcome! Follow these steps:
-
-1. **Fork this repository**.
-2. Create a new branch for your feature:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add your feature description"
-   ```
-4. Push to your fork:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. Open a pull request on the main repository.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----
-
-## Acknowledgements
-
-Thanks to all contributors and the open-source community for providing tools and inspiration.
-
+Would you like me to:
+1. Add more technical details?
+2. Include setup instructions?
+3. Add contribution guidelines?
+4. Include API documentation?
