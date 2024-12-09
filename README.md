@@ -89,10 +89,6 @@ For any queries or suggestions, please reach out to [your-email@example.com]
 [Add screenshots of key features]
 
 ---
-Built with ❤️ by [Your Team Name]
+Built with ❤️ by Aditya, magnus, Bokyung, Jeff, William
 
-Would you like me to:
-1. Add more technical details?
-2. Include setup instructions?
-3. Add contribution guidelines?
-4. Include API documentation?
+
