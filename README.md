@@ -28,7 +28,7 @@ npm (v6 or higher)
 ### Installation
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/smart-study-buddy.git
+git clone https://github.com/ady-6720e/smart-study-buddy.git
 cd smart-study-buddy
 ```
 
